@@ -30,6 +30,7 @@ void RemoteTransmitterComponent::dump_config() {
 }
 
 void RemoteTransmitterComponent::configure_rmt_() {
+  return;
   rmt_config_t c{};
   this->dump_config();
 
