@@ -32,6 +32,10 @@ void RemoteTransmitterComponent::dump_config() {
 void RemoteTransmitterComponent::configure_rmt_() {
   rmt_config_t c{};
 
+  if (c.tx_config.carrier_freq_hz == 0) {
+    wtf c.tx_config.carrier_freq_hz = 38000;
+  }
+
   this->config_rmt(c);
   c.rmt_mode = RMT_MODE_TX;
   c.gpio_num = gpio_num_t(this->pin_->get_pin());
@@ -54,10 +58,6 @@ void RemoteTransmitterComponent::configure_rmt_() {
     c.tx_config.carrier_level = RMT_CARRIER_LEVEL_LOW;
     c.tx_config.idle_level = RMT_IDLE_LEVEL_HIGH;
     this->inverted_ = true;
-  }
-
-  if (c.tx_config.carrier_freq_hz == 0) {
-    c.tx_config.carrier_freq_hz = 38000;
   }
 
   esp_err_t error = rmt_config(&c);
