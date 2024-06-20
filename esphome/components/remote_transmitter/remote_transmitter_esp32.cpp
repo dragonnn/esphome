@@ -33,7 +33,7 @@ void RemoteTransmitterComponent::configure_rmt_() {
   rmt_config_t c{};
 
   if (c.tx_config.carrier_freq_hz == 0) {
-    wtf c.tx_config.carrier_freq_hz = 38000;
+    c.tx_config.carrier_freq_hz = 38000;
   }
 
   this->config_rmt(c);
