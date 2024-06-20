@@ -56,8 +56,8 @@ void RemoteTransmitterComponent::configure_rmt_() {
     this->inverted_ = true;
   }
 
-  if (c.tx_config.carrier_duty_percent) {
-    c.tx_config.carrier_duty_percent = this->carrier_duty_percent_;
+  if (c.tx_config.carrier_duty_percent == 0) {
+    c.tx_config.carrier_duty_percent = 50;
   }
 
   if (c.tx_config.carrier_freq_hz == 0) {
