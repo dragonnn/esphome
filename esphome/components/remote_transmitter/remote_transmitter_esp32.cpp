@@ -31,10 +31,12 @@ void RemoteTransmitterComponent::dump_config() {
 
 void RemoteTransmitterComponent::configure_rmt_() {
   rmt_config_t c{};
+  this->dump_config();
 
+  ESP_LOGE(TAG, "rmt init carrier_duty_percent is 0, overwrite");
   if (c.tx_config.carrier_duty_percent == 0) {
     ESP_LOGE(TAG, "rmt init carrier_duty_percent is 0, overwrite");
-    c.tx_config.carrier_duty_percent = this->carrier_duty_percent_;
+    c.tx_config.carrier_duty_percent = 50;
   }
 
   if (c.tx_config.carrier_freq_hz == 0) {
