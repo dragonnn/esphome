@@ -1,6 +1,6 @@
-#include "remote_transmitter.h"
-#include "esphome/core/log.h"
 #include "esphome/core/application.h"
+#include "esphome/core/log.h"
+#include "remote_transmitter.h"
 
 #ifdef USE_ESP32
 
@@ -18,13 +18,14 @@ void RemoteTransmitterComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "  Clock divider: %u", this->clock_divider_);
   LOG_PIN("  Pin: ", this->pin_);
 
-  if (this->current_carrier_frequency_ != 0 && this->carrier_duty_percent_ != 100) {
+  if (this->current_carrier_frequency_ != 0 &&
+      this->carrier_duty_percent_ != 100) {
     ESP_LOGCONFIG(TAG, "    Carrier Duty: %u%%", this->carrier_duty_percent_);
   }
 
   if (this->is_failed()) {
-    ESP_LOGE(TAG, "Configuring RMT driver failed: %s (%s)", esp_err_to_name(this->error_code_),
-             this->error_string_.c_str());
+    ESP_LOGE(TAG, "Configuring RMT driver failed: %s (%s)",
+             esp_err_to_name(this->error_code_), this->error_string_.c_str());
   }
 }
 
@@ -36,7 +37,8 @@ void RemoteTransmitterComponent::configure_rmt_() {
   c.gpio_num = gpio_num_t(this->pin_->get_pin());
   c.tx_config.loop_en = false;
 
-  if (this->current_carrier_frequency_ == 0 || this->carrier_duty_percent_ == 100) {
+  if (this->current_carrier_frequency_ == 0 ||
+      this->carrier_duty_percent_ == 100) {
     c.tx_config.carrier_en = false;
   } else {
     c.tx_config.carrier_en = true;
@@ -54,6 +56,10 @@ void RemoteTransmitterComponent::configure_rmt_() {
     this->inverted_ = true;
   }
 
+  if (c.tx_config.carrier_freq_hz == 0) {
+    c.tx_config.carrier_freq_hz = 38000;
+  }
+
   esp_err_t error = rmt_config(&c);
   if (error != ESP_OK) {
     this->error_code_ = error;
@@ -67,7 +73,9 @@ void RemoteTransmitterComponent::configure_rmt_() {
     if (error != ESP_OK) {
       this->error_code_ = error;
       if (error == ESP_ERR_INVALID_STATE) {
-        this->error_string_ = str_sprintf("RMT channel %i is already in use by another component", this->channel_);
+        this->error_string_ =
+            str_sprintf("RMT channel %i is already in use by another component",
+                        this->channel_);
       } else {
         this->error_string_ = "in rmt_driver_install";
       }
@@ -78,7 +86,8 @@ void RemoteTransmitterComponent::configure_rmt_() {
   }
 }
 
-void RemoteTransmitterComponent::send_internal(uint32_t send_times, uint32_t send_wait) {
+void RemoteTransmitterComponent::send_internal(uint32_t send_times,
+                                               uint32_t send_wait) {
   if (this->is_failed())
     return;
 
@@ -125,7 +134,8 @@ void RemoteTransmitterComponent::send_internal(uint32_t send_times, uint32_t sen
     return;
   }
   for (uint32_t i = 0; i < send_times; i++) {
-    esp_err_t error = rmt_write_items(this->channel_, this->rmt_temp_.data(), this->rmt_temp_.size(), true);
+    esp_err_t error = rmt_write_items(this->channel_, this->rmt_temp_.data(),
+                                      this->rmt_temp_.size(), true);
     if (error != ESP_OK) {
       ESP_LOGW(TAG, "rmt_write_items failed: %s", esp_err_to_name(error));
       this->status_set_warning();
@@ -137,7 +147,7 @@ void RemoteTransmitterComponent::send_internal(uint32_t send_times, uint32_t sen
   }
 }
 
-}  // namespace remote_transmitter
-}  // namespace esphome
+} // namespace remote_transmitter
+} // namespace esphome
 
 #endif
