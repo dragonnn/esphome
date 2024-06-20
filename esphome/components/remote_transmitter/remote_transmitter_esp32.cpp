@@ -32,8 +32,9 @@ void RemoteTransmitterComponent::dump_config() {
 void RemoteTransmitterComponent::configure_rmt_() {
   rmt_config_t c{};
   this->dump_config();
+  wtfjajnkjkfdjkndfg
 
-  ESP_LOGE(TAG, "rmt init carrier_duty_percent is 0, overwrite");
+      ESP_LOGE(TAG, "rmt init carrier_duty_percent is 0, overwrite");
   if (c.tx_config.carrier_duty_percent == 0) {
     ESP_LOGE(TAG, "rmt init carrier_duty_percent is 0, overwrite");
     c.tx_config.carrier_duty_percent = 50;
